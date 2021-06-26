@@ -111,6 +111,7 @@ nginxでいい感じにするなら以下の設定が必須
 ## webapp 起動方法
 
 ```shell-session
+service mysql start
 cd webapp/sql
 
 # databaseとuserを初期化する
@@ -119,10 +120,23 @@ mysql -u root < 00_create_database.sql
 # データを流し込む
 ./init.sh
 
-cd webapp/go
-make
-./isucari
+# Payment および Shipment サーバー立ち上げ (それぞれ別のウィンドウで実行)
+
+$ cd isucon9-qualify
+$ ./bin/payment
+
+$ cd isucon9-qualify
+$ ./bin/shipment
+
+# flask アプリを起動 (mysql が必要)
+
+$ cd isucon9-qualify/webapp/python
+$ python3 -m venv venv
+$ pip install -r requirements.txt
+$ python app.py
 ```
+
+この状態で <http://localhost:8000> にアクセスすると動いている確認できる。
 
 ## 運営側のブログ
 
