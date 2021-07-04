@@ -166,11 +166,21 @@ MySQL 5.7および8.0にて動作確認しています。
 
 ```bash
 # 以下3行でスロークエリの設定
-echo "set global slow_query_log=1;" | mysql
-echo "set global long_query_time=0;" | mysql
+echo "set global slow_query_log=1;" | mysql && \
+echo "set global long_query_time=0;" | mysql && \
 echo "set global log_queries_not_using_indexes=1;" | mysql
 # 以下でログ出力先を確認
 echo "show variables like 'slow_query_log_file';" |  mysql
 # ベンチマークを実行後、以下でスロークエリログを確認
 mysqldumpslow /var/lib/mysql/XXXXX-slow.log
+```
+
+### index 追加
+
+以下で追加できる。SQL クエリの修正は特に必要ない。今回の場合、id がそれぞれのテーブルの主キーとなっていたため効果なかった。
+
+```bash
+echo "create index idx_id on isucari.categories(id);" | mysql && \
+echo "create index idx_id on isucari.users(id);" | mysql && \
+echo "create index idx_id on isucari.items(id);" | mysql
 ```
