@@ -5,14 +5,15 @@ RUN apt update && apt upgrade -y
 RUN apt install -y python3 \
     python3-pip \
     python3-dev \
-    libffi \
     mysql-server \
     mysql-client \
     default-libmysqlclient-dev \
     git \
     wget \
     curl \
-    build-essential
+    build-essential \
+    libffi-dev \
+    htop
 
 
 COPY requirements.txt .

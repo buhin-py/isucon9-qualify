@@ -111,7 +111,9 @@ nginxでいい感じにするなら以下の設定が必須
 ## webapp 起動方法
 
 ```shell-session
+# mysql サービスを立ち上げ (場所はどこでもよい)
 service mysql start
+
 cd webapp/sql
 
 # databaseとuserを初期化する
@@ -131,9 +133,7 @@ $ ./bin/shipment
 # flask アプリを起動 (mysql が必要)
 
 $ cd isucon9-qualify/webapp/python
-$ python3 -m venv venv
-$ pip install -r requirements.txt
-$ python app.py
+$ python3 app.py
 ```
 
 この状態で <http://localhost:8000> にアクセスすると動いている確認できる。
@@ -158,3 +158,19 @@ MySQL 5.7および8.0にて動作確認しています。
 
 - なんちゃって個人情報 http://kazina.com/dummy/
 - 椅子画像提供 941-san https://twitter.com/941/status/1157193422127505412
+
+
+## スロークエリ
+
+- [第131回　mysqldumpslowを使ってスロークエリログを解析してみる：MySQL道普請便り｜gihyo.jp … 技術評論社](https://gihyo.jp/dev/serial/01/mysql-road-construction-news/0131)
+
+```bash
+# 以下3行でスロークエリの設定
+echo "set global slow_query_log=1;" | mysql
+echo "set global long_query_time=0;" | mysql
+echo "set global log_queries_not_using_indexes=1;" | mysql
+# 以下でログ出力先を確認
+echo "show variables like 'slow_query_log_file';" |  mysql
+# ベンチマークを実行後、以下でスロークエリログを確認
+mysqldumpslow /var/lib/mysql/XXXXX-slow.log
+```
